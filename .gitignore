@@ -1,0 +1,4 @@
+.omc/
+.shots/
+*.pdf
+.DS_Store

@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>컬쳐랜드 · 컬쳐캐쉬 AI 안내 시제품</title>
+<!-- SUIT (SIL OFL 1.1) — 컬쳐랜드 모바일웹과 같은 서체 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
+<style>
+  /* 디자인 토큰: m.cultureland.co.kr 실측값 (2026-11-08) */
+  :root {
+    --red:#da4634; --logo:#fa4634; --redSoft:rgba(218,70,52,.1);
+    --ink:#303030; --sub:#6f6f6f; --mute:#989898; --line:#dfe1e5;
+    --bg:#f5f6f8; --chip:#edf0f5; --navy:#3b4f76; --bar:rgba(48,48,48,.98);
+    --shadow:0 4px 20px rgba(0,0,0,.1);
+    --warn:#fff6e5; --warnInk:#8a5a00; --info:#eef3fb; --infoInk:#3b4f76;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"SUIT Variable", -apple-system, "Apple SD Gothic Neo", sans-serif; background:#d9dce1; color:var(--ink); display:flex; justify-content:center; align-items:center; min-height:100vh; -webkit-font-smoothing:antialiased; }
+  .phone { width:390px; height:844px; background:#fff; border-radius:44px; border:10px solid #111; overflow:hidden; display:flex; flex-direction:column; position:relative; }
+  @media (max-width:480px) { body { display:block; } .phone { width:100%; height:100vh; border:0; border-radius:0; } }
+  button { font-family:inherit; color:inherit; }
+
+  header { display:flex; align-items:center; padding:0 18px; height:52px; background:#fff; flex-shrink:0; }
+  header .logo { color:var(--logo); font-weight:900; font-size:19px; letter-spacing:.5px; font-style:italic; }
+  header .icons { margin-left:auto; display:flex; gap:14px; align-items:center; font-size:13px; color:var(--sub); }
+  .tabs { display:flex; gap:18px; padding:0 18px; font-weight:700; font-size:18px; color:var(--mute); background:#fff; flex-shrink:0; }
+  .tabs span { padding:6px 0 9px; } .tabs span.on { color:var(--ink); border-bottom:3px solid var(--ink); }
+
+  .strip { background:var(--navy); color:#fff; margin:10px 14px 0; border-radius:16px; padding:12px 16px; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  .strip small { color:#a8b8ca; font-size:12px; } .strip b { font-size:17px; margin-left:4px; transition:color .3s; } .strip b.flash { color:#ffd27a; }
+  .strip .r { margin-left:auto; font-size:12px; color:#a8b8ca; }
+
+  main { flex:1; overflow-y:auto; background:var(--bg); padding:14px 14px 18px; scroll-behavior:smooth; }
+  .ai-note { text-align:center; font-size:11px; color:var(--mute); margin-bottom:12px; }
+
+  .msg { display:flex; gap:8px; margin-bottom:14px; align-items:flex-start; }
+  .msg.me { justify-content:flex-end; }
+  .ava { width:32px; height:32px; border-radius:50%; background:var(--logo); color:#fff; font-weight:900; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; font-style:italic; }
+  .bub { background:#fff; border-radius:4px 18px 18px 18px; padding:14px 16px; box-shadow:0 2px 10px rgba(0,0,0,.05); font-size:15px; line-height:1.55; max-width:310px; }
+  .msg.me .bub { background:var(--navy); color:#fff; border-radius:18px 4px 18px 18px; box-shadow:none; max-width:250px; }
+  .bub p + p { margin-top:6px; }
+  .typing span { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--mute); margin-right:4px; animation:b 1s infinite; }
+  .typing span:nth-child(2) { animation-delay:.15s } .typing span:nth-child(3) { animation-delay:.3s }
+  @keyframes b { 0%,60%,100% { opacity:.3 } 30% { opacity:1 } }
+
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; margin-top:10px; }
+  .card .t { font-weight:700; font-size:16px; }
+  .card .s { color:var(--sub); font-size:13px; margin-top:2px; }
+  .btn { display:block; width:100%; border:1px solid var(--red); border-radius:12px; height:46px; font-size:15px; font-weight:600; background:var(--red); color:#fff; cursor:pointer; margin-top:10px; }
+  .btn.ghost { background:#fff; color:var(--sub); border-color:var(--line); }
+  .btn:disabled { opacity:.45; cursor:default; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .chip { border:1px solid var(--line); background:#fff; border-radius:99px; padding:7px 12px; font-size:13px; font-weight:500; cursor:pointer; }
+  .chip.soft { background:var(--chip); border-color:var(--chip); }
+  .menu { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+  .menu button { border:0; background:var(--bg); border-radius:12px; padding:10px 0; font-size:12px; color:var(--sub); cursor:pointer; }
+  .menu i { display:block; font-style:normal; font-size:18px; margin-bottom:2px; }
+
+  .badge { display:inline-block; font-size:11px; font-weight:600; padding:2px 7px; border-radius:99px; margin:6px 4px 0 0; background:var(--chip); color:var(--sub); }
+  .badge.ok { background:#e6f5ec; color:#1d7a43; } .badge.on { background:#e9effa; color:var(--navy); } .badge.off { background:var(--redSoft); color:var(--red); }
+  .badge.demo { background:#f1ebfb; color:#6a4bb3; } .badge.unk { background:var(--warn); color:var(--warnInk); }
+  .notice { background:var(--warn); color:var(--warnInk); border-radius:10px; padding:10px 12px; font-size:13px; line-height:1.5; margin-top:10px; }
+  .notice.info { background:var(--info); color:var(--infoInk); }
+  .bal { display:flex; justify-content:space-between; align-items:center; background:var(--bg); border-radius:10px; padding:10px 12px; margin-top:10px; font-size:13px; color:var(--sub); }
+  .bal b { color:var(--ink); font-size:16px; margin-left:4px; }
+  ol.steps { list-style:none; counter-reset:s; margin-top:12px; }
+  ol.steps li { counter-increment:s; position:relative; padding:1px 0 12px 32px; font-size:14px; line-height:1.45; }
+  ol.steps li::before { content:counter(s); position:absolute; left:0; top:0; width:22px; height:22px; border-radius:50%; background:var(--red); color:#fff; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center; }
+  ol.steps li:not(:last-child)::after { content:''; position:absolute; left:10.5px; top:25px; bottom:1px; width:1px; background:var(--line); }
+  .src { font-size:11px; color:var(--mute); line-height:1.6; margin-top:10px; border-top:1px dashed var(--line); padding-top:8px; } .src a { color:var(--navy); }
+  .amounts { display:flex; gap:6px; margin-top:8px; } .amounts button { flex:1; height:40px; border:1px solid var(--line); background:#fff; border-radius:10px; font-weight:600; font-size:13px; cursor:pointer; color:var(--sub); }
+  .amounts button.on { border-color:var(--red); color:var(--red); background:var(--redSoft); }
+  .field { width:100%; border:1px solid var(--line); border-radius:10px; height:42px; padding:0 12px; font-size:14px; font-family:inherit; color:var(--sub); background:var(--bg); margin-top:6px; }
+
+  .news { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-top:10px; }
+  .k { display:inline-block; font-size:11px; font-weight:700; color:var(--red); background:var(--redSoft); border-radius:99px; padding:2px 7px; margin-right:6px; }
+  .d { font-size:11px; color:var(--mute); }
+  .h { font-weight:700; font-size:14px; margin-top:6px; line-height:1.4; }
+  .news .l { font-size:13px; color:var(--sub); margin-top:4px; line-height:1.5; }
+  .news a { font-size:12px; color:var(--navy); display:inline-block; margin-top:6px; }
+  .news.rel { background:var(--bg); border:0; }
+  .rail { display:flex; gap:8px; overflow-x:auto; margin:10px -16px 0; padding:0 16px 4px; scroll-snap-type:x mandatory; }
+  .rail .news { flex:0 0 200px; margin-top:0; cursor:pointer; scroll-snap-align:start; }
+  form.composer { display:flex; gap:8px; padding:10px 14px; background:#fff; border-top:1px solid var(--line); flex-shrink:0; }
+  form.composer input { flex:1; border:1px solid var(--line); border-radius:99px; height:46px; padding:0 18px; font-size:15px; font-family:inherit; outline:0; min-width:0; }
+  form.composer input:focus { border-color:var(--navy); }
+  form.composer button { border:0; background:var(--navy); color:#fff; border-radius:99px; width:46px; height:46px; font-size:18px; cursor:pointer; }
+  nav.bar { background:var(--bar); border-radius:24px 24px 0 0; display:flex; justify-content:space-around; padding:10px 6px 14px; color:#fff; font-size:11px; flex-shrink:0; }
+  nav.bar div { text-align:center; opacity:.7; cursor:pointer; } nav.bar div.on { opacity:1; font-weight:700; }
+  nav.bar i { display:block; font-style:normal; font-size:18px; margin-bottom:2px; filter:grayscale(1) contrast(0) brightness(2); }
+  .toast { position:absolute; left:50%; bottom:150px; transform:translateX(-50%); background:rgba(1,1,1,.8); color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; width:max-content; max-width:85%; text-align:center; opacity:0; transition:opacity .2s; pointer-events:none; }
+  .toast.show { opacity:1; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <header><span class="logo">CULTURE LAND</span><span class="icons"><span>📅 출첵</span><span style="font-size:20px">☰</span></span></header>
+  <div class="tabs"><span class="on">컬쳐캐쉬</span><span>충전</span><span>구매/선물</span><span>교환소</span><span>이벤트</span></div>
+  <div class="strip"><small>사용가능</small><b id="bal">0원</b><span class="badge demo" style="margin:0">시연용</span><span class="r">보관중 0원</span></div>
+  <main id="chat"><p class="ai-note">컬쳐캐쉬 AI 안내 · 컬쳐랜드 공식 정보(확인일 2026-11-08) 기반 응답</p></main>
+  <form class="composer" onsubmit="send(event)"><input id="q" placeholder="어디서, 어떻게 쓸지 물어보세요" autocomplete="off"><button aria-label="보내기">↑</button></form>
+  <nav class="bar">
+    <div onclick="soon()"><i>🛍</i>STRAW#</div><div onclick="soon()"><i>🛒</i>캐쉬사용</div><div class="on"><i>Ⓒ</i>컬쳐캐쉬</div><div onclick="soon()"><i>🎮</i>게임</div><div onclick="soon()"><i>🎁</i>혜택</div>
+  </nav>
+  <div class="toast" id="toast"></div>
+</div>
+<script src="data.js"></script>
+<script>
+// ── 가상 시연 데이터 (실제 정보 아님) ─────────────────────────
+var DEMO = { balance: 0 };
+var ctx = { last: null, pending: null, amt: 10000 }; // 대화 맥락: 직전 사용처, 충전 후 이어갈 안내, 선택 금액
+var DELAY = 450;                                     // AI 응답 연출 지연(ms)
+
+var $ = function (id) { return document.getElementById(id); };
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
+function js(s) { return "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'"; }
+function won(n) { return n.toLocaleString('ko-KR') + '원'; }
+function fill(s, m) { return s.replace(/\{m\}/g, m); }
+function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove('show'); }, 2200); }
+function soon() { toast('시연 범위 밖 메뉴예요'); }
+function byName(n) { return MERCHANTS.filter(function (m) { return m.name === n; })[0]; }
+function chanBadge(k) { return '<span class="badge ' + (k === 'barcode' ? 'off' : 'on') + '">' + CATEGORIES[k].channel + '</span>'; }
+function channels(m) {
+  var on = m.cats.some(function (c) { return c !== 'barcode'; }), off = m.cats.indexOf('barcode') >= 0;
+  return (on ? '<span class="badge on">온라인</span>' : '') + (off ? '<span class="badge off">오프라인</span>' : '');
+}
+function src(keys) {
+  return '<div class="src">출처 · 확인일 ' + CHECKED + '<br>' + keys.map(function (k) {
+    return '<a href="' + SOURCES[k].url + '" target="_blank" rel="noopener">' + esc(SOURCES[k].title) + '</a>';
+  }).join(' · ') + '</div>';
+}
+
+// ── 공지·서비스 소개 카드 ─────────────────────────────────
+function openNotice(id) { me(noticeById(id).title + ' 알려줘'); replyNotice(id); }
+function newsHead(n) { return '<span class="k">' + n.kind + '</span>' + (n.date ? '<span class="d">' + n.date + '</span>' : '') + '<div class="h">' + esc(n.title) + '</div>'; }
+function newsLink(n) { return '<a href="' + n.url + '" target="_blank" rel="noopener">공지 원문 보기 ›</a>'; }
+// 답변에 붙는 '관련 소식' (짧게)
+function related(id, lead) {
+  var n = noticeById(id); if (!n) return '';
+  return '<div class="news rel"><div style="font-size:11px;color:var(--mute);margin-bottom:4px">📢 관련 소식</div>' + newsHead(n) +
+    (lead || n.lead ? '<div class="l">' + esc(lead || n.lead) + '</div>' : '') +
+    '<button class="chip" style="margin-top:8px" onclick="openNotice(' + js(id) + ')">자세히 알려줘</button></div>';
+}
+
+// ── 대화 렌더링 ──────────────────────────────────────────
+function scroll() { var c = $('chat'); c.scrollTop = c.scrollHeight; }
+function me(text) { $('chat').insertAdjacentHTML('beforeend', '<div class="msg me"><div class="bub">' + esc(text) + '</div></div>'); scroll(); }
+function bot(html) {
+  var c = $('chat');
+  c.insertAdjacentHTML('beforeend', '<div class="msg" data-typing><div class="ava">C</div><div class="bub typing"><span></span><span></span><span></span></div></div>');
+  scroll();
+  var run = function () {
+    var t = c.querySelector('[data-typing]'); if (t) t.remove();
+    c.insertAdjacentHTML('beforeend', '<div class="msg"><div class="ava">C</div><div class="bub">' + html + '</div></div>');
+    c.scrollTop = c.lastElementChild.offsetTop - c.offsetTop - 12; // 긴 답변은 첫 줄부터 보이게
+  };
+  DELAY ? setTimeout(run, DELAY) : run();
+}
+function setBalance() { var b = $('bal'); b.textContent = won(DEMO.balance); b.classList.add('flash'); setTimeout(function () { b.classList.remove('flash'); }, 900); }
+
+// ── 입력 → 의도 → 답변 ───────────────────────────────────
+function send(e) { e.preventDefault(); var v = $('q').value.trim(); if (!v) return; $('q').value = ''; ask(v); }
+function ask(text) {
+  me(text);
+  var c = classify(text, ctx.last);
+  if (c.type === 'notice') return replyNotice(c.id);
+  if (c.type === 'notices') return replyNotices();
+  if (c.type === 'charge') return replyCharge();
+  if (c.type === 'balance') return bot('<p>지금 사용가능 컬쳐캐쉬는 <b>' + won(DEMO.balance) + '</b>이에요. <span class="badge demo">시연용</span></p>' +
+    '<div class="chips"><button class="chip" onclick="ask(\'충전하는 방법 알려줘\')">충전하기</button></div>' +
+    related('safe', '11월 23일부터 컬쳐캐쉬는 모두 안심금고에 보관되고, 본인 확인 후 찾아서 써요.') + related('expire'));
+  if (c.type === 'none') return replyNone(text);
+  var list = c.r.merchants;
+  if (list.length === 1) return replyMerchant(list[0], c.r.intent, c.r.matchedBy === 'context');
+  replyList(list, c.r.intent);
+}
+
+function replyMerchant(m, intent, fromContext) {
+  ctx.last = m.name;
+  var noOffline = intent === 'offline' && m.cats.indexOf('barcode') < 0;
+  var cats = m.cats.slice().sort(function (a, b) { return intent === 'offline' ? (b === 'barcode') - (a === 'barcode') : 0; });
+  var head = noOffline
+    ? '<p><b>' + esc(m.name) + '</b>은(는) 공식 목록상 <b>매장 바코드 결제 목록에는 없어요.</b></p><p>대신 아래 방법으로 이용할 수 있어요.</p>'
+    : intent === 'offline'
+      ? '<p>' + (fromContext ? '네, ' : '') + '<b>' + esc(m.name) + '</b> 매장에서 쓸 수 있어요. 바코드 결제가 가능해요.</p>'
+      : '<p>네, <b>' + esc(m.name) + '</b>에서 컬쳐랜드를 쓸 수 있어요. 이용 방법이 <b>' + cats.length + '가지</b> 있어요.</p>';
+  bot(head + '<div>' + '<span class="badge ok">✓ 공식 사용처</span>' + channels(m) + '</div>' +
+    cats.map(function (k) {
+      var c = CATEGORIES[k];
+      return '<div class="card"><div class="t">' + c.name + '</div><div class="s">' + esc(fill(c.summary, m.name)) + '</div>' +
+        chanBadge(k) + (c.needsCash ? '<span class="badge">컬쳐캐쉬 필요</span>' : '') +
+        '<button class="btn ghost" onclick="showMethod(' + js(m.name) + ',' + js(k) + ')">이 방법으로 쓰는 순서 보기</button></div>';
+    }).join('') +
+    (m.cats.indexOf('barcode') >= 0 && intent !== 'offline' ? '<div class="chips"><button class="chip soft" onclick="ask(\'매장에서도 돼?\')">매장에서도 돼?</button></div>' : '') +
+    (m.notice ? related(m.notice) : '') +
+    src(m.src));
+}
+
+function replyList(list, intent) {
+  ctx.last = null;
+  bot('<p>공식 목록에서 <b>' + list.length + '곳</b>을 찾았어요' + (intent === 'offline' ? ' (매장 바코드 결제 가능한 곳)' : '') + '. 어디서 쓰실 건가요?</p>' +
+    '<div class="chips">' + list.map(function (m) { return '<button class="chip" onclick="ask(' + js(m.name + (intent === 'offline' ? ' 매장에서 쓸 수 있어?' : '에서 쓸 수 있어?')) + ')">' + esc(m.name) + '</button>'; }).join('') + '</div>' +
+    src(['S1']));
+}
+
+function replyNone(text) {
+  bot('<p><b>“' + esc(text) + '”</b>은(는) 컬쳐랜드 공식 사용처 목록에서 찾지 못했어요.</p>' +
+    '<p class="s" style="color:var(--sub);font-size:13px">사용할 수 없다는 뜻은 아닐 수 있어요. 공식 목록에 없는 내용은 추측해서 안내하지 않아요.</p>' +
+    '<div class="notice info">· 다른 이름으로 물어봐 주세요 (예: 씨지브이)<br>· 고객센터 <b>1577-2111</b> (평일 08:00~17:00)</div>' +
+    '<div class="chips"><button class="chip soft" onclick="ask(\'영화관에서 쓸 수 있어?\')">영화관</button><button class="chip soft" onclick="ask(\'편의점에서 쓰려면?\')">편의점</button><button class="chip soft" onclick="ask(\'서점에서 쓸 수 있어?\')">서점</button></div>' +
+    src(['S1']));
+}
+
+function showMethod(name, cat, auto) {
+  var m = byName(name), c = CATEGORIES[cat];
+  if (!auto) me(m.name + ' ' + c.name + ' 순서 알려줘');
+  var html = '<p><b>' + esc(m.name) + ' · ' + c.name + '</b></p>';
+  var blocked = c.needsCash && DEMO.balance <= 0;
+  if (c.needsCash) {
+    html += '<div class="bal"><span>사용가능 컬쳐캐쉬<b>' + won(DEMO.balance) + '</b></span>' +
+      '<span class="badge ' + (blocked ? 'unk">충전 필요' : 'ok">결제 가능') + '</span></div>';
+    if (blocked) {
+      ctx.pending = { name: name, cat: cat };
+      html += '<div class="notice">잔액이 0원이라 먼저 충전이 필요해요. 충전하면 이 안내를 이어서 보여드릴게요.</div>' +
+        '<button class="btn" onclick="ask(\'충전하는 방법 알려줘\')">컬쳐랜드상품권 충전하기</button>';
+    }
+  }
+  html += c.steps ? '<ol class="steps">' + c.steps.map(function (x) { return '<li>' + esc(fill(x, m.name)) + '</li>'; }).join('') + '</ol>'
+    : '<div class="notice"><span class="badge unk" style="margin-top:0">미확인</span> 공식 페이지에 단계별 구매 절차가 없어요. 앱 [쿠폰] 메뉴 또는 고객센터 1577-2111에서 확인해 주세요.</div>';
+  if (c.notes.length) html += '<div class="notice info">' + c.notes.map(function (x) { return '· ' + esc(fill(x, m.name)); }).join('<br>') + '</div>';
+  html += '<div class="notice"><b>확인 못 한 정보</b> · ' + c.unverified.join(', ') + '<br>추측하지 않고 비워 뒀어요.</div>';
+  if (!blocked) html += '<button class="btn" onclick="toast(' + js('시연: 실제 서비스에서는 ' + (cat === 'barcode' ? '상품권 바코드 화면' : c.name + ' 메뉴') + '로 이동해요') + ')">' +
+    (cat === 'barcode' ? '상품권 바코드 열기' : c.name.replace(/^쇼핑몰 /, '').replace(/ 구매$/, '') + ' 바로가기') + '</button>';
+  if (c.notice) html += related(c.notice, '11월 23일부터는 안심금고에서 본인 확인 후 찾아서 결제해요. 결제창에서 결제가 안 되면 먼저 찾기를 해 주세요.');
+  bot(html + src(c.sources));
+}
+
+function replyNotice(id) {
+  var n = noticeById(id), next = {
+    safe: ['잔액 얼마야?', 'CGV에서 쓸 수 있어?'], paper: ['충전하는 방법 알려줘'], webtoon: ['네이버웹툰 어떻게 써?'], gta: ['PS Store 어떻게 써?']
+  }[id] || [];
+  bot(newsHead(n).replace('class="h"', 'class="h" style="font-size:16px"') +
+    (n.lead ? '<p style="margin-top:8px">' + esc(n.lead) + '</p>' : '') +
+    (n.steps ? '<p style="margin-top:10px;font-weight:700;font-size:14px">컬쳐캐쉬 사용 방법 (11/23부터)</p><ol class="steps">' + n.steps.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' : '') +
+    (n.body ? '<div class="notice info">' + n.body.map(function (x) { return '· ' + esc(x); }).join('<br>') + '</div>'
+      : '<div class="notice"><span class="badge unk" style="margin-top:0">요약 미확인</span> 본문이 이미지라 내용을 요약하지 않았어요. 원문에서 확인해 주세요.</div>') +
+    '<div>' + newsLink(n).replace('<a ', '<a style="font-size:13px;color:var(--navy);display:inline-block;margin-top:10px" ') + '</div>' +
+    (next.length ? '<div class="chips">' + next.map(function (x) { return '<button class="chip soft" onclick="ask(' + js(x) + ')">' + esc(x) + '</button>'; }).join('') + '</div>' : ''));
+}
+
+function replyNotices() {
+  bot('<p>컬쳐랜드 공지·서비스 소식이에요. 궁금한 소식을 누르면 요약해 드려요.</p>' +
+    NOTICES.map(function (n) { return '<div class="news" style="cursor:pointer" onclick="openNotice(' + js(n.id) + ')">' + newsHead(n) + '</div>'; }).join('') +
+    '<div class="src">출처 · 확인일 ' + CHECKED + '<br><a href="https://m.cultureland.co.kr/tgl/noticeList.do" target="_blank" rel="noopener">컬쳐랜드 공지사항</a></div>');
+}
+
+function replyCharge() {
+  bot('<p>컬쳐랜드상품권을 컬쳐캐쉬로 충전하는 공식 순서예요.</p>' +
+    '<ol class="steps"><li>컬쳐랜드 앱/웹 로그인</li><li>충전 › 컬쳐랜드상품권(모바일문화상품권)</li><li>상품권 번호 입력 후 충전</li></ol>' +
+    '<div class="notice info">· (주)한국문화진흥 발행 컬쳐랜드상품권만 충전돼요. 지류·온라인문화상품권은 안 돼요.<br>· 보유한도를 넘는 금액은 \'대기 컬쳐캐쉬\'로 적립돼요.<br>· 50만원 이상 보유하려면 고객확인제도(CDD/EDD)가 필요해요.</div>' +
+    '<div class="card"><div class="t">여기서 바로 충전 <span class="badge demo">시연용</span></div>' +
+      '<input class="field" value="TEST-DEMO-0000" readonly aria-label="상품권 번호(시연용)">' +
+      '<div class="amounts">' + [10000, 30000, 50000].map(function (a) {
+        return '<button class="' + (a === ctx.amt ? 'on' : '') + '" onclick="pickAmt(this,' + a + ')">' + won(a) + '</button>';
+      }).join('') + '</div>' +
+      '<p style="font-size:11px;color:var(--mute);margin-top:6px">가상 번호·금액이에요. 실제 상품권 번호를 입력하지 마세요. 충전 수수료·한도는 미확인.</p>' +
+      '<button class="btn" onclick="doCharge(this)">충전하기</button></div>' +
+    related('paper', '온라인문화상품권(2025.08.11)·지류상품권(2026.02.06) 충전은 종료됐어요. 컬쳐랜드상품권은 계속 충전돼요.') +
+    src(['MOBILE', 'CASH', 'FAQ']));
+}
+function pickAmt(el, a) { ctx.amt = a; [].forEach.call(el.parentNode.children, function (b) { b.classList.toggle('on', b === el); }); }
+function doCharge(el) {
+  if (el) el.disabled = true;
+  var amt = ctx.amt;
+  me(won(amt) + ' 충전할게요');
+  DEMO.balance += amt; setBalance();
+  var p = ctx.pending; ctx.pending = null;
+  bot('<p><b>' + won(amt) + '</b> 충전됐어요. 사용가능 컬쳐캐쉬는 <b>' + won(DEMO.balance) + '</b>이에요. <span class="badge demo">시연용</span></p>' +
+    (p ? '<p>이어서 <b>' + esc(p.name) + ' ' + CATEGORIES[p.cat].name + '</b> 순서를 안내할게요.</p>' : ''));
+  if (p) setTimeout(function () { showMethod(p.name, p.cat, true); }, DELAY + 50);
+}
+
+function welcome() {
+  bot('<p>안녕하세요! <b>컬쳐캐쉬 AI 안내</b>예요.</p><p>어디서 쓸 수 있는지, 어떻게 쓰는지 물어보시면 확인부터 결제 순서까지 한 번에 알려드려요.</p>' +
+    '<div class="chips">' + ['CGV에서 쓸 수 있어?', '편의점에서 쓰려면?', '올리브영 매장에서 돼?', '네이버페이로 전환하고 싶어', '넥슨'].map(function (x) {
+      return '<button class="chip" onclick="ask(' + js(x) + ')">' + x + '</button>';
+    }).join('') + '</div>' +
+    '<p style="margin-top:14px;font-weight:700;font-size:14px">📢 컬쳐랜드 소식</p>' +
+    '<div class="rail">' + ['safe', 'webtoon', 'gta', 'refund'].map(function (id) {
+      var n = noticeById(id); return '<div class="news" onclick="openNotice(' + js(id) + ')">' + newsHead(n) + '</div>';
+    }).join('') + '<div class="news" onclick="ask(\'공지 뭐 있어?\')" style="flex-basis:110px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--sub)">전체 보기 ›</div></div>' +
+    '<div class="menu">' +
+      '<button onclick="ask(\'충전하는 방법 알려줘\')"><i>🎫</i>충전</button>' +
+      '<button onclick="ask(\'포인트 전환\')"><i>Ⓟ</i>전환</button>' +
+      '<button onclick="ask(\'매장 바코드 결제 어디서 돼?\')"><i>▥</i>바코드 결제</button>' +
+      '<button onclick="ask(\'구글플레이\')"><i>▶</i>Google</button>' +
+      '<button onclick="ask(\'잔액 얼마야?\')"><i>₩</i>잔액</button>' +
+      '<button onclick="soon()"><i>🎟</i>쿠폰</button>' +
+    '</div>');
+}
+welcome();
+</script>
+</body>
+</html>
