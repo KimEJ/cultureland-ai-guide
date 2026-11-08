@@ -1,0 +1,28 @@
+@page { size: A4; margin: 13mm 13mm 14mm; }
+* { box-sizing: border-box; }
+body { font-family: "SUIT Variable", "Apple SD Gothic Neo", sans-serif; color: #303030; font-size: 9pt; line-height: 1.5; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+h1 { font-size: 22pt; margin: 0 0 2pt; color: #303030; letter-spacing: -0.5pt; }
+h1 + p strong { font-size: 12.5pt; color: #da4634; }
+.cover p { margin: 3pt 0; }
+h2 { font-size: 14pt; margin: 0 0 7pt; padding-left: 9pt; border-left: 4pt solid #da4634; line-height: 1.25; break-after: avoid; }
+h3 { font-size: 10.5pt; margin: 9pt 0 5pt; break-after: avoid; }
+p { margin: 4pt 0; }
+hr { display: none; }
+section { margin-top: 12pt; }
+table { width: 100%; border-collapse: collapse; margin: 5pt 0; break-inside: avoid; font-size: 8.3pt; }
+th, td { border: 0.6pt solid #dfe1e5; padding: 3.5pt 5pt; vertical-align: top; text-align: left; }
+th { background: #f5f6f8; font-weight: 700; }
+td:first-child { white-space: nowrap; }
+td img { width: 100%; border: 0.6pt solid #dfe1e5; border-radius: 6pt; display: block; margin-bottom: 3pt; }
+table:has(img) td { border: 0; padding: 2pt 3pt; white-space: normal; font-size: 7.6pt; line-height: 1.35; color: #6f6f6f; }
+table:has(img) td b { color: #303030; font-size: 8pt; }
+blockquote { margin: 5pt 0; padding: 5pt 9pt; background: #f5f6f8; border-radius: 6pt; color: #6f6f6f; font-size: 8pt; }
+blockquote p { margin: 0; }
+ol, ul { margin: 3pt 0; padding-left: 16pt; } li { margin: 1.5pt 0; }
+a { color: #3b4f76; text-decoration: none; }
+strong { color: #303030; }
+table:has(img) { table-layout: fixed; }
+td img { max-height: 78mm; object-fit: cover; object-position: top; }
+table:has(img) td { white-space: normal !important; }
+table:has(img) td img { max-height: 92mm; }
+section:nth-of-type(1) table:has(img) td img { max-height: 64mm; }

@@ -2,3 +2,8 @@
 .shots/
 *.pdf
 .DS_Store
+docs/print.html
+tools/node_modules/
+tools/package-lock.json
+docs/시연영상_대본.md
+!docs/설명자료.pdf

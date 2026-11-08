@@ -30,3 +30,5 @@ assert.strictEqual(classify('모바일문화상품권 충전').type, 'charge');
 assert.strictEqual(classify('공지 뭐 있어?').type, 'notices');
 assert.strictEqual(classify('환불하고 싶어').id, 'refund');
 console.log('ok notices');
+assert.strictEqual(require('./data.js').CATEGORIES.coupon.steps.length, 5);
+console.log('ok coupon');

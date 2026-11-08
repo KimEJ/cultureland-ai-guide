@@ -1,0 +1,10 @@
+const p = await openTab('https://kimej.github.io/cultureland-ai-guide/prototype/'); await sleep(3000);
+await p.evaluate(%HELPERS%);
+await p.evaluate(%PREP%); while (!(await p.evaluate('window.__prepped'))) await sleep(100); await sleep(400);
+await p.evaluate('DELAY=450; window.__done=false; ' + %POST%); await sleep(800);
+const r = JSON.parse(await p.evaluate('JSON.stringify(document.querySelector(".phone").getBoundingClientRect())'));
+let rec = true; const t0 = Date.now();
+const loop = (async () => { while (rec) { const b = await p.screenshot({ type: 'jpeg', quality: 75 }); console.log('F:' + (Date.now() - t0) + ':' + Buffer.from(b).toString('base64')); await sleep(45); } })();
+await p.evaluate(%ACT%);
+while (!(await p.evaluate('window.__done')) || Date.now() - t0 < %MIN%) await sleep(100);
+await sleep(300); rec = false; await loop; console.log('END:' + (Date.now() - t0));
